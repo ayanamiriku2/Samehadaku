@@ -272,9 +272,35 @@ def rewrite_html(html: str, request_path: str,
         '', html, flags=re.DOTALL | re.IGNORECASE,
     )
 
-    # Step 9: Fix structured data (JSON-LD)
+    # Step 9: Fix ImageObject microdata – add missing "name" property
+    html = _fix_imageobject_microdata(html)
+
+    # Step 10: Fix structured data (JSON-LD)
     html = _fix_structured_data(html, request_path, m_url)
 
+    return html
+
+
+def _fix_imageobject_microdata(html: str) -> str:
+    """Add missing 'name' property to ImageObject microdata to satisfy Google rich results."""
+    def _add_name(m):
+        block = m.group(0)
+        # Already has itemprop="name" → nothing to do
+        if re.search(r'itemprop=["\']name["\']', block):
+            return block
+        # Try to extract a name from the <img> alt or title attribute
+        img_match = re.search(r'<img\s[^>]*(?:alt|title)=["\']([^"\']+)["\']', block, re.IGNORECASE)
+        name = img_match.group(1).strip() if img_match else ""
+        if not name:
+            return block
+        # Inject <meta itemprop="name"> right after the opening tag
+        tag_end = m.group(0).index(">") + 1
+        return block[:tag_end] + f'<meta itemprop="name" content="{name}">' + block[tag_end:]
+
+    html = re.sub(
+        r'<[^>]+itemtype=["\']https?://schema\.org/ImageObject["\'][^>]*>.*?</div>',
+        _add_name, html, flags=re.DOTALL | re.IGNORECASE,
+    )
     return html
 
 
