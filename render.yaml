@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: samehadaku-mirror
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SOURCE_DOMAIN
+        value: v2.samehadaku.how
+      - key: SOURCE_SCHEME
+        value: https
+      - key: MIRROR_DOMAIN
+        sync: false        # Set manually to your Render domain
+      - key: MIRROR_SCHEME
+        value: https
+      - key: CACHE_ENABLED
+        value: "true"
+      - key: WORKERS
+        value: "4"
+      - key: IMPERSONATE_BROWSER
+        value: chrome
+    healthCheckPath: /_health
+    autoDeploy: true

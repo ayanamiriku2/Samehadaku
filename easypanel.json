@@ -1,0 +1,53 @@
+{
+  "name": "samehadaku-mirror",
+  "services": [
+    {
+      "name": "web",
+      "type": "app",
+      "source": {
+        "type": "github",
+        "owner": "ayanamiriku2",
+        "repo": "Samehadaku",
+        "ref": "main",
+        "path": "/"
+      },
+      "build": {
+        "type": "dockerfile",
+        "file": "Dockerfile"
+      },
+      "deploy": {
+        "replicas": 1,
+        "command": null,
+        "zeroDowntime": true
+      },
+      "domains": [
+        {
+          "host": "$(EASYPANEL_DOMAIN)"
+        }
+      ],
+      "ports": [
+        {
+          "published": 80,
+          "target": 8000,
+          "protocol": "http"
+        }
+      ],
+      "env": {
+        "SOURCE_DOMAIN": "v2.samehadaku.how",
+        "SOURCE_SCHEME": "https",
+        "MIRROR_DOMAIN": "$(EASYPANEL_DOMAIN)",
+        "MIRROR_SCHEME": "https",
+        "CACHE_ENABLED": "true",
+        "WORKERS": "4",
+        "IMPERSONATE_BROWSER": "chrome"
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "name": "cache",
+          "mountPath": "/tmp/mirror_cache"
+        }
+      ]
+    }
+  ]
+}

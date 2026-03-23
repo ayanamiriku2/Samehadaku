@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mirror:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SOURCE_DOMAIN=v2.samehadaku.how
+      - SOURCE_SCHEME=https
+      - MIRROR_DOMAIN=yourdomain.com       # ← ganti dengan domain mirror kamu
+      - MIRROR_SCHEME=https
+      - CACHE_ENABLED=true
+      - CACHE_DIR=/tmp/mirror_cache
+      - CACHE_TTL_HTML=300
+      - CACHE_TTL_ASSETS=86400
+      - PORT=8000
+      - WORKERS=4
+      - IMPERSONATE_BROWSER=chrome
+      - REQUEST_TIMEOUT=30
+    volumes:
+      - cache_data:/tmp/mirror_cache
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/_health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  cache_data:
