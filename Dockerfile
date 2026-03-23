@@ -17,7 +17,7 @@ COPY app/ ./app/
 # Default env vars (override at deploy time)
 ENV SOURCE_DOMAIN=v2.samehadaku.how \
     SOURCE_SCHEME=https \
-    MIRROR_DOMAIN=localhost:8000 \
+    MIRROR_DOMAIN=samehadaku.ink \
     MIRROR_SCHEME=https \
     CACHE_ENABLED=true \
     CACHE_DIR=/tmp/mirror_cache \

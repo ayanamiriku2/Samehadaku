@@ -6,7 +6,7 @@ SOURCE_SCHEME = os.getenv("SOURCE_SCHEME", "https")
 SOURCE_URL = f"{SOURCE_SCHEME}://{SOURCE_DOMAIN}"
 
 # Your mirror domain (set this to your actual deployed domain)
-MIRROR_DOMAIN = os.getenv("MIRROR_DOMAIN", "localhost:8000")
+MIRROR_DOMAIN = os.getenv("MIRROR_DOMAIN", "samehadaku.ink")
 MIRROR_SCHEME = os.getenv("MIRROR_SCHEME", "https")
 MIRROR_URL = f"{MIRROR_SCHEME}://{MIRROR_DOMAIN}"
 
