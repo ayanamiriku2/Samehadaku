@@ -265,7 +265,14 @@ def rewrite_html(html: str, request_path: str,
     # Step 7: Remove gambling/judi online ad banners & links
     html = _remove_ad_banners(html)
 
-    # Step 8: Fix structured data (JSON-LD)
+    # Step 8: Remove "PENTING" announcement widget
+    html = re.sub(
+        r'<div\s+class=["\']widget_senction["\']>.*?</div>\s*\n?\s*'
+        r'(?:<!--\s*/wp:group\s*-->\s*</div>)?',
+        '', html, flags=re.DOTALL | re.IGNORECASE,
+    )
+
+    # Step 9: Fix structured data (JSON-LD)
     html = _fix_structured_data(html, request_path, m_url)
 
     return html
